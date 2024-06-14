@@ -10,6 +10,8 @@ const Index = () => {
     { title: "Event 2", details: "Details about Event 2" },
     { title: "Event 3", details: "Details about Event 3" },
   ]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +22,11 @@ const Index = () => {
     setEvents([...events, newEvent]);
     setNewEvent({ title: "", details: "" });
     setIsModalOpen(false);
+  };
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setIsDetailsModalOpen(true);
   };
 
   return (
@@ -34,7 +41,7 @@ const Index = () => {
           <Heading as="h2" size="lg" mb={4}>Upcoming Events</Heading>
           <Flex direction="column" gap={4}>
             {events.map((event, index) => (
-              <Box key={index} p={4} shadow="md" borderWidth="1px" borderRadius="md">
+              <Box key={index} p={4} shadow="md" borderWidth="1px" borderRadius="md" onClick={() => handleEventClick(event)} cursor="pointer">
                 <Heading as="h3" size="md">{event.title}</Heading>
                 <Text mt={2}>{event.details}</Text>
               </Box>
@@ -62,6 +69,19 @@ const Index = () => {
               Save
             </Button>
             <Button variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{selectedEvent?.title}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>{selectedEvent?.details}</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" onClick={() => setIsDetailsModalOpen(false)}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
